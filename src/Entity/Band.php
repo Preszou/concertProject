@@ -44,6 +44,16 @@ class Band
      */
     private $concerts;
 
+    /**
+     * @ORM\Column(type="binary", nullable=true)
+     */
+    private $picture;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pictureS;
+
     public function __construct()
     {
         $this->members = new ArrayCollection();
@@ -141,6 +151,30 @@ class Band
         if ($this->concerts->removeElement($concert)) {
             $concert->removeBand($this);
         }
+
+        return $this;
+    }
+
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    public function setPicture($picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getPictureS(): ?string
+    {
+        return $this->pictureS;
+    }
+
+    public function setPictureS(?string $pictureS): self
+    {
+        $this->pictureS = $pictureS;
 
         return $this;
     }
