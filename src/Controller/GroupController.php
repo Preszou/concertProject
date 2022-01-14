@@ -24,4 +24,22 @@ class GroupController extends AbstractController
             ]
         );
     }
+
+
+    /**
+     * Affiche une liste de concerts
+     *
+     * @param string $name
+     * @return Response
+     *
+     * @Route("/band/{id}", name="list")
+     */
+    public function liste(BandRepository $br, int $id): Response
+    {
+        return $this->render('concert/band.show.html.twig', [
+            'band' =>$br->find($id),
+
+            ]
+        );
+    }
 }

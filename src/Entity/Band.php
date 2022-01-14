@@ -25,34 +25,34 @@ class Band
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $members_number;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $style;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Members::class, mappedBy="fromBand")
-     */
-    private $members;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Concert::class, mappedBy="band")
-     */
-    private $concerts;
-
-    /**
-     * @ORM\Column(type="binary", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $picture;
 
     /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $creationYear;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $pictureS;
+    private $lastAlbumName;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Member::class, mappedBy="band", orphanRemoval=true)
+     */
+    private $members;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Concert::class, mappedBy="bands")
+     */
+    private $concerts;
 
     public function __construct()
     {
@@ -77,18 +77,6 @@ class Band
         return $this;
     }
 
-    public function getMembersNumber(): ?int
-    {
-        return $this->members_number;
-    }
-
-    public function setMembersNumber(int $members_number): self
-    {
-        $this->members_number = $members_number;
-
-        return $this;
-    }
-
     public function getStyle(): ?string
     {
         return $this->style;
@@ -101,42 +89,98 @@ class Band
         return $this;
     }
 
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getCreationYear(): ?\DateTimeInterface
+    {
+        return $this->creationYear;
+    }
+
+    public function setCreationYear(?\DateTimeInterface $creationYear): self
+    {
+        $this->creationYear = $creationYear;
+
+        return $this;
+    }
+
+    public function getLastAlbumName(): ?string
+    {
+        return $this->lastAlbumName;
+    }
+
+    public function setLastAlbumName(?string $lastAlbumName): self
+    {
+        $this->lastAlbumName = $lastAlbumName;
+
+        return $this;
+    }
+
     /**
-     * @return Collection|Members[]
+     * @return Collection|Member[]
      */
     public function getMembers(): Collection
     {
         return $this->members;
     }
 
-    public function addMember(Members $member): self
+    public function addMember(Member $member): self
     {
         if (!$this->members->contains($member)) {
             $this->members[] = $member;
-            $member->addFromBand($this);
+            $member->setBand($this);
         }
 
         return $this;
     }
 
-    public function removeMember(Members $member): self
+    public function removeMember(Member $member): self
     {
         if ($this->members->removeElement($member)) {
-            $member->removeFromBand($this);
+            // set the owning side to null (unless already changed)
+            if ($member->getBand() === $this) {
+                $member->setBand(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDate(): ?Show
+    {
+        return $this->date;
+    }
+
+    public function setDate(Show $date): self
+    {
+        $this->date = $date;
+
+        // set the owning side of the relation if necessary
+        if ($date->getBand() !== $this) {
+            $date->setBand($this);
         }
 
         return $this;
     }
 
     /**
-     * @return Collection|Concert[]
+     * @return Collection|Show[]
      */
     public function getConcerts(): Collection
     {
         return $this->concerts;
     }
 
-    public function addConcert(Concert $concert): self
+    public function addConcert(Show $concert): self
     {
         if (!$this->concerts->contains($concert)) {
             $this->concerts[] = $concert;
@@ -146,35 +190,11 @@ class Band
         return $this;
     }
 
-    public function removeConcert(Concert $concert): self
+    public function removeConcert(Show $concert): self
     {
         if ($this->concerts->removeElement($concert)) {
             $concert->removeBand($this);
         }
-
-        return $this;
-    }
-
-    public function getPicture()
-    {
-        return $this->picture;
-    }
-
-    public function setPicture($picture): self
-    {
-        $this->picture = $picture;
-
-        return $this;
-    }
-
-    public function getPictureS(): ?string
-    {
-        return $this->pictureS;
-    }
-
-    public function setPictureS(?string $pictureS): self
-    {
-        $this->pictureS = $pictureS;
 
         return $this;
     }

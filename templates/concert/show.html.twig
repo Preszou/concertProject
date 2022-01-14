@@ -1,8 +1,9 @@
 {% extends 'base.html.twig'%}
-{%block title%} Liste des Bands {%endblock%}
+
+{%block title%} band.getName(){%endblock%}
 {% block body %}
-  {%for bandd in band %}
+
   <li> {{bandd.getName()}}</li>
-  <img src="{{bandd.getPicture()}}">
+  <img src="{{band.getPicture()}}">
   {%endfor%}
   {%endblock%}

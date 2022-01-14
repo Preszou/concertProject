@@ -20,40 +20,34 @@ class Concert
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
-
-    /**
      * @ORM\Column(type="date")
      */
     private $date;
 
     /**
-     * @ORM\ManyToMany(targetEntity=band::class, inversedBy="concerts")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $band;
+    private $tourName;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Hall::class, inversedBy="Hall", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $hall;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Band::class, inversedBy="concerts")
+     */
+    private $bands;
 
     public function __construct()
     {
-        $this->band = new ArrayCollection();
+        $this->bands = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getDate(): ?\DateTimeInterface
@@ -68,26 +62,50 @@ class Concert
         return $this;
     }
 
-    /**
-     * @return Collection|band[]
-     */
-    public function getBand(): Collection
+    public function getTourName(): ?string
     {
-        return $this->band;
+        return $this->tourName;
     }
 
-    public function addBand(band $band): self
+    public function setTourName(?string $tourName): self
     {
-        if (!$this->band->contains($band)) {
-            $this->band[] = $band;
+        $this->tourName = $tourName;
+
+        return $this;
+    }
+
+    public function getHall(): ?Hall
+    {
+        return $this->hall;
+    }
+
+    public function setHall(Hall $hall): self
+    {
+        $this->hall = $hall;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Band[]
+     */
+    public function getBands(): Collection
+    {
+        return $this->bands;
+    }
+
+    public function addBand(Band $band): self
+    {
+        if (!$this->bands->contains($band)) {
+            $this->bands[] = $band;
         }
 
         return $this;
     }
 
-    public function removeBand(band $band): self
+    public function removeBand(Band $band): self
     {
-        $this->band->removeElement($band);
+        $this->bands->removeElement($band);
 
         return $this;
     }

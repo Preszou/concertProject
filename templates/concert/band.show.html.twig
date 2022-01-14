@@ -1,0 +1,8 @@
+{% extends 'base.html.twig'%}
+
+{%block title%} band.getName(){%endblock%}
+{% block body %}
+
+  <li> {{band.getName()}}</li>
+  <img src="../{{band.getPicture()}}">
+  {%endblock%}

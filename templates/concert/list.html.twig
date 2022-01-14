@@ -1,7 +1,9 @@
-{% extends 'base.html.twig'%}
-{%block title%} Liste des concerts {%endblock%}
+{% extends 'base.html.twig' %}
+
 {% block body %}
-  {%for concert in concerts %}
-  <li> {{concert|capitalize}}</li>
-  {%endfor%}
-  {%endblock%}
+    Hello {{ name }}!
+    {% for concert in concerts %}
+        <li>{{ concert }}</li>
+        <li>{{concert}}</li>
+    {% endfor %}
+{% endblock %}
